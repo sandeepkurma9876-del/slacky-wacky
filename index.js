@@ -14,17 +14,17 @@ const app = new App({
 });
 
 /**
- * 1. Command: /ask-groq
+ * 1. Command: /slacky-wacky-ask
  * Description: Forwards a user's question to the Groq API and returns the answer.
  */
-app.command('/ask-groq', async ({ command, ack, respond }) => {
+app.command('/slacky-wacky-ask', async ({ command, ack, respond }) => {
   // Acknowledge the command request immediately back to Slack
   await ack();
 
   const userQuestion = command.text;
 
   if (!userQuestion) {
-    await respond({ text: `Hey <@${command.user_id}>, please provide a question! Example: \`/ask-groq What is JavaScript?\`` });
+    await respond({ text: `Hey <@${command.user_id}>, please provide a question! Example: \`/slacky-wacky-ask What is JavaScript?\`` });
     return;
   }
 
@@ -67,25 +67,25 @@ app.command('/ask-groq', async ({ command, ack, respond }) => {
 });
 
 /**
- * 2. Command: /bot-status
+ * 2. Command: /slacky-wacky-status
  * Description: Simple health check command to see if the server code is alive.
  */
-app.command('/bot-status', async ({ command, ack, respond }) => {
+app.command('/slacky-wacky-status', async ({ command, ack, respond }) => {
   await ack();
   await respond({ text: `🟢 *Status Update:* \`slacky-wacky\` is online, connected via Socket Mode, and running smoothly!` });
 });
 
 /**
- * 3. Command: /bot-help
+ * 3. Command: /slacky-wacky-help
  * Description: Lists available commands and usage hints.
  */
-app.command('/bot-help', async ({ command, ack, respond }) => {
+app.command('/slacky-wacky-help', async ({ command, ack, respond }) => {
   await ack();
   const helpMessage = `
 *Available Commands for \`slacky-wacky\`:*
-• \`/ask-groq [your question]\` - Sends your question to the Groq AI model and replies with the response.
-• \`/bot-status\` - Checks if the bot application server is responsive.
-• \`/bot-help\` - Displays this help message.
+• \`/slacky-wacky-ask [your question]\` - Sends your question to the Groq AI model and replies with the response.
+• \`/slacky-wacky-status\` - Checks if the bot application server is responsive.
+• \`/slacky-wacky-help\` - Displays this help message.
   `;
   await respond({ text: helpMessage });
 });
