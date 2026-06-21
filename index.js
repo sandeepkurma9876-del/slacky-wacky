@@ -17,20 +17,20 @@ const app = new App({
  * 1. Command: /ask-groq
  * Description: Forwards a user's question to the Groq API and returns the answer.
  */
-app.command('/ask-groq', async ({ command, ack, say }) => {
+app.command('/ask-groq', async ({ command, ack, respond }) => {
   // Acknowledge the command request immediately back to Slack
   await ack();
 
   const userQuestion = command.text;
 
   if (!userQuestion) {
-    await say(`Hey <@${command.user_id}>, please provide a question! Example: \`/ask-groq What is JavaScript?\``);
+    await respond({ text: `Hey <@${command.user_id}>, please provide a question! Example: \`/ask-groq What is JavaScript?\`` });
     return;
   }
 
   try {
     // Notify the user that the bot is processing
-    await say(`_Thinking... Let me ask Groq about: "${userQuestion}"_`);
+    await respond({ text: `_Thinking... Let me ask Groq about: "${userQuestion}"_` });
 
     // Make the request to the Groq API
     const response = await axios.post(
@@ -55,14 +55,14 @@ app.command('/ask-groq', async ({ command, ack, say }) => {
     const groqAnswer = response.data.choices[0].message.content;
 
     // Send the answer back to the Slack channel
-    await say({
+    await respond({
       text: `*Answer for <@${command.user_id}>:*\n${groqAnswer}`,
       mrkdwn: true
     });
 
   } catch (error) {
     console.error('Groq API Error:', error.response ? error.response.data : error.message);
-    await say(`Sorry <@${command.user_id}>, I encountered an error communicating with Groq.`);
+    await respond({ text: `Sorry <@${command.user_id}>, I encountered an error communicating with Groq.` });
   }
 });
 
@@ -70,16 +70,16 @@ app.command('/ask-groq', async ({ command, ack, say }) => {
  * 2. Command: /bot-status
  * Description: Simple health check command to see if the server code is alive.
  */
-app.command('/bot-status', async ({ command, ack, say }) => {
+app.command('/bot-status', async ({ command, ack, respond }) => {
   await ack();
-  await say(`🟢 *Status Update:* \`slacky-wacky\` is online, connected via Socket Mode, and running smoothly!`);
+  await respond({ text: `🟢 *Status Update:* \`slacky-wacky\` is online, connected via Socket Mode, and running smoothly!` });
 });
 
 /**
  * 3. Command: /bot-help
  * Description: Lists available commands and usage hints.
  */
-app.command('/bot-help', async ({ command, ack, say }) => {
+app.command('/bot-help', async ({ command, ack, respond }) => {
   await ack();
   const helpMessage = `
 *Available Commands for \`slacky-wacky\`:*
@@ -87,7 +87,7 @@ app.command('/bot-help', async ({ command, ack, say }) => {
 • \`/bot-status\` - Checks if the bot application server is responsive.
 • \`/bot-help\` - Displays this help message.
   `;
-  await say(helpMessage);
+  await respond({ text: helpMessage });
 });
 
 // Start the app
