@@ -1,0 +1,11 @@
+[Unit]
+Description=Slack Bot
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/node /home/sandeepkurma9876-del/slacky-wacky/index.js
+WorkingDirectory=/home/sandeepkurma9876-del/slacky-wacky
+Restart=always
+
+[Install]
+WantedBy=default.target

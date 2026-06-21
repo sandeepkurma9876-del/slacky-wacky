@@ -1,0 +1,14 @@
+{
+  "name": "slack_bot",
+  "version": "1.0.0",
+  "description": "Hack Club Nest Slack Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@slack/bolt": "^4.7.3",
+    "axios": "^1.18.0",
+    "dotenv": "^17.4.2"
+  }
+}
