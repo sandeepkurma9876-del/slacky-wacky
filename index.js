@@ -36,7 +36,7 @@ app.command('/ask-groq', async ({ command, ack, say }) => {
     const response = await axios.post(
       'https://api.groq.com/openai/v1/chat/completions',
       {
-        model: 'llama3-8b-8192', // You can change this to your preferred Groq model
+        model: 'llama-3.3-70b-versatile', // You can change this to your preferred Groq model
         messages: [
           {
             role: 'user',
