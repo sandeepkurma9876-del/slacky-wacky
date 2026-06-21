@@ -34,8 +34,18 @@ function clearHistory(userId) {
   stmt.run(userId);
 }
 
+function getMessageCount() {
+  try {
+    const row = db.prepare('SELECT count(*) as count FROM messages').get();
+    return row ? row.count : 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
 module.exports = {
   addMessage,
   getHistory,
-  clearHistory
+  clearHistory,
+  getMessageCount
 };
