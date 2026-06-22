@@ -3,8 +3,8 @@ Description=Slack Bot
 After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/node /home/sandeepkurma9876-del/slacky-wacky/index.js
-WorkingDirectory=/home/sandeepkurma9876-del/slacky-wacky
+ExecStart=/root/.nvm/versions/node/v24.17.0/bin/node /root/slacky-wacky/index.js
+WorkingDirectory=/root/slacky-wacky
 Restart=always
 
 [Install]
