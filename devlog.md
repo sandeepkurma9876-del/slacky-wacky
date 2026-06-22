@@ -26,23 +26,19 @@ I have successfully implemented all four advanced features to upgrade the "Slack
 
 ---
 
-## Devlog #2: Website Launch & Dashboard Routing
+## Devlog #2: Minimal Unified Interface Launch
 
-I have successfully designed and built a premium landing page website for **slacky-wacky** and separated it from the live system monitoring dashboard.
+I have successfully redesigned the bot's web interface into an ultra-minimalist, unified dashboard, eliminating stereotypical glowing AI design patterns.
 
-### 1. Separation of Routing
-* **Landing Page (`/`)**: Serves as the primary public-facing portal explaining the bot's features, commands, and installation details.
-* **Live Dashboard (`/dashboard`)**: Relocated the real-time glassmorphism telemetry dashboard to `/dashboard` so users can easily toggle between marketing/docs and real-time monitoring.
-* **Navigation Links**: Integrated simple, clean navigation buttons to transition smoothly between `/` and `/dashboard`.
+### 1. Minimalist Aesthetics & Layout
+* **Color Palette**: Replaced the glowing dark gradients with a warm, off-white editorial theme (`#f9f9f6` background) with high-contrast stone-charcoal text.
+* **Layout**: Clean single-column layout centered around essential metrics and tables with thin borders (`1px solid #e6e5e0`).
+* **No Hype / Marketing Text**: Removed generic marketing copy ("the intelligent assistant") and focused strictly on status, commands, and actual statistics.
 
-### 2. Premium Design Aesthetics (Stitch Inspired)
-* **Tailored Dark Palette**: Applied HSL tailormade colors with dark indigo and purple glows/gradients.
-* **Typography**: Integrated modern Google Fonts (`Outfit` for headings and `Inter` for body copy, with `Fira Code` for commands).
-* **Glassmorphism**: Liquid glass cards utilizing `backdrop-filter: blur(16px)` and thin borders.
-* **Mock Slack Client**: Coded a gorgeous visual preview panel mimicking a live Slack channel interaction demonstrating the `/slacky-wacky-ask` command.
-* **Slash Commands Grid**: Showcases all commands (`/slacky-wacky-ask`, `/slacky-wacky-status`, `/slacky-wacky-joke`, `/slacky-wacky-fact`, `/slacky-wacky-define`, `/slacky-wacky-help`) with explanations.
+### 2. Dashboard Integration
+* **Unified Route (`/`)**: Serves both documentation (slash command registry) and real-time system metrics (API latency, uptime, SQLite database message logs).
+* **Automatic Redirects**: Requests to `/dashboard` now redirect automatically to the main page to prevent navigation clutter.
 
-### 3. Verification & Deployment
-* **GitHub**: Pushed to the remote feature branch on GitHub.
-* **Deployment**: Uploaded modified `server.js` and `tests.test.js` to Nest via SCP and restarted the systemd `slackbot.service`.
-* **Testing**: All unit tests updated and passing (verified root landing page content and `/dashboard` response status code).
+### 3. Verification & Live Deployment
+* **Testing**: Updated and passed all Jest assertions verifying the clean rendering structure.
+* **Deployment**: SCP'd files to the Nest host container and successfully restarted the service.
