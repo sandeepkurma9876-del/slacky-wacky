@@ -126,7 +126,7 @@ app.get('/', (req, res) => {
     }
     
     body {
-      background: var(--bg);
+      background: radial-gradient(circle at 15% 15%, rgba(79, 70, 229, 0.04), transparent 45%), radial-gradient(circle at 85% 85%, rgba(192, 132, 252, 0.04), transparent 45%), var(--bg);
       font-family: 'Inter', sans-serif;
       color: var(--text);
       line-height: 1.5;
@@ -304,6 +304,7 @@ app.get('/', (req, res) => {
         <thead>
           <tr>
             <th>Command</th>
+            <th>Description</th>
             <th>Uses</th>
             <th>Last Used</th>
           </tr>
@@ -335,9 +336,10 @@ app.get('/', (req, res) => {
         for (const [cmd, stats] of Object.entries(data.commandStats)) {
           const tr = document.createElement('tr');
           tr.innerHTML = \`
-            <td><code>\${cmd}</code></td>
-            <td>\${stats.count}</td>
-            <td style="color: var(--text-muted); font-size: 0.875rem;">\${stats.lastUsed}</td>
+            <td><code>\\\${cmd}</code></td>
+            <td style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400;">\\\${stats.desc}</td>
+            <td>\\\${stats.count}</td>
+            <td style="color: var(--text-muted); font-size: 0.875rem;">\\\${stats.lastUsed}</td>
           \`;
           tbody.appendChild(tr);
         }
