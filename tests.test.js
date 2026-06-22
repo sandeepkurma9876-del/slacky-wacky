@@ -36,15 +36,16 @@ describe('Express Server Tests', () => {
         expect(res.body.status).toBe('ok');
     });
 
-    test('GET / should return HTML landing page', async () => {
+    test('GET / should return minimal stats page', async () => {
         const res = await request(serverApp).get('/');
         expect(res.statusCode).toBe(200);
-        expect(res.text).toContain('slacky-wacky - The Ultimate AI Slack Bot');
+        expect(res.text).toContain('slacky-wacky');
+        expect(res.text).toContain('Metrics');
     });
 
-    test('GET /dashboard should return HTML dashboard', async () => {
+    test('GET /dashboard should redirect to /', async () => {
         const res = await request(serverApp).get('/dashboard');
-        expect(res.statusCode).toBe(200);
-        expect(res.text).toContain('Slack Bot Live Dashboard');
+        expect(res.statusCode).toBe(302);
+        expect(res.headers.location).toBe('/');
     });
 });
