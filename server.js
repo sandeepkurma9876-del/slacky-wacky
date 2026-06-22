@@ -336,10 +336,10 @@ app.get('/', (req, res) => {
         for (const [cmd, stats] of Object.entries(data.commandStats)) {
           const tr = document.createElement('tr');
           tr.innerHTML = \`
-            <td><code>\\\${cmd}</code></td>
-            <td style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400;">\\\${stats.desc}</td>
-            <td>\\\${stats.count}</td>
-            <td style="color: var(--text-muted); font-size: 0.875rem;">\\\${stats.lastUsed}</td>
+            <td><code>\${cmd}</code></td>
+            <td style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400;">\${stats.desc}</td>
+            <td>\${stats.count}</td>
+            <td style="color: var(--text-muted); font-size: 0.875rem;">\${stats.lastUsed}</td>
           \`;
           tbody.appendChild(tr);
         }
