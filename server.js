@@ -86,7 +86,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
 });
 
-app.get('/', (req, res) => {
+app.get('/dashboard', (req, res) => {
   let sqliteCount = 0;
   let sqliteHealth = "Healthy";
   if (db && typeof db.getMessageCount === 'function') {
@@ -597,6 +597,7 @@ app.get('/', (req, res) => {
         <h1 class="brand-title">Slack Bot Live Dashboard</h1>
       </div>
       <div class="header-controls">
+        <a href="/" class="btn" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); color: #fff; padding: 0.4rem 0.9rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); margin-right: 1rem; transition: background 0.2s;">&larr; Landing Page</a>
         <div class="pulse-indicator"><span></span> Live Monitoring</div>
         <div class="status-badge">
           <div class="status-dot"></div>
@@ -822,6 +823,658 @@ app.get('/', (req, res) => {
   `;
   res.send(html);
 });
+
+app.get('/', (req, res) => {
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>slacky-wacky - The Ultimate AI Slack Bot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #05070a; /* Deep dark background */
+      --card-bg: rgba(15, 23, 42, 0.4);
+      --card-border: rgba(255, 255, 255, 0.05);
+      --card-highlight: rgba(255, 255, 255, 0.1);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --primary: #818cf8; /* indigo */
+      --secondary: #c084fc; /* purple */
+      --tertiary: #38bdf8; /* cyan */
+      
+      --glow-primary: rgba(129, 140, 248, 0.4);
+      --glow-secondary: rgba(192, 132, 252, 0.4);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(129, 140, 248, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.1) 0%, transparent 50%);
+      background-attachment: fixed;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    h1, h2, h3, h4, .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    /* Navbar */
+    nav {
+      padding: 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 100;
+    }
+    
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px var(--glow-primary);
+    }
+    
+    .brand-title {
+      font-size: 1.5rem;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      font-size: 0.95rem;
+    }
+    
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(129, 140, 248, 0.39);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(129, 140, 248, 0.5);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 8rem 0 6rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 9999px;
+      color: var(--tertiary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 20%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.03em;
+    }
+    
+    .hero-gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+    
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Features Grid */
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 4rem;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    .features {
+      padding: 6rem 0;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--card-highlight);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    
+    .glass-card:hover::before {
+      opacity: 1;
+    }
+    
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-title {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+    
+    .feature-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Commands Showcase */
+    .commands-showcase {
+      padding: 6rem 0;
+      background: rgba(15, 23, 42, 0.2);
+      border-top: 1px solid rgba(255,255,255,0.02);
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+    
+    .commands-container {
+      display: flex;
+      gap: 4rem;
+      align-items: center;
+    }
+    
+    .commands-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .command-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .command-item:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .command-name {
+      font-family: 'Fira Code', monospace;
+      color: var(--tertiary);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .command-explanation {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .commands-visual {
+      flex: 1;
+      position: relative;
+    }
+    
+    .mock-slack {
+      background: #1a1d21;
+      border-radius: 16px;
+      border: 1px solid #383838;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .mock-slack-header {
+      background: #222529;
+      padding: 1rem;
+      border-bottom: 1px solid #383838;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .mock-slack-dots {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .mock-slack-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .mock-slack-dot:nth-child(1) { background: #ff5f56; }
+    .mock-slack-dot:nth-child(2) { background: #ffbd2e; }
+    .mock-slack-dot:nth-child(3) { background: #27c93f; }
+    
+    .mock-slack-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #d1d2d3;
+      margin-left: 1rem;
+    }
+    
+    .mock-slack-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .mock-message {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .mock-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: bold;
+      color: white;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .mock-user-avatar {
+      background: #4a154b;
+    }
+    
+    .mock-message-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .mock-message-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    
+    .mock-author {
+      font-weight: 700;
+      color: #e8e8e8;
+    }
+    
+    .mock-time {
+      font-size: 0.75rem;
+      color: #ababad;
+    }
+    
+    .mock-text {
+      color: #d1d2d3;
+      font-size: 0.95rem;
+    }
+    
+    .mock-text code {
+      font-family: 'Fira Code', monospace;
+      background: rgba(0,0,0,0.3);
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--tertiary);
+    }
+    
+    .mock-block {
+      margin-top: 0.5rem;
+      background: #222529;
+      border: 1px solid #383838;
+      border-radius: 8px;
+      padding: 1rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 0;
+      text-align: center;
+      border-top: 1px solid var(--card-border);
+      margin-top: auto;
+    }
+    
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 992px) {
+      .commands-container {
+        flex-direction: column;
+      }
+      .hero h1 {
+        font-size: 3.5rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="/" class="brand">
+        <div class="brand-logo">SW</div>
+        <div class="brand-title">slacky-wacky</div>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#commands" class="nav-link">Commands</a>
+        <a href="/dashboard" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">Live Dashboard</a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="hero-badge">
+          ✨ Powered by Groq Llama-3.2-11b-vision
+        </div>
+        <h1>
+          The intelligent assistant <br/>
+          <span class="hero-gradient-text">for modern teams.</span>
+        </h1>
+        <p>
+          Supercharge your Slack workspace with lightning-fast AI, conversational memory, image analysis, and interactive Block Kit interfaces.
+        </p>
+        <div class="hero-actions">
+          <a href="#" class="btn btn-primary">Add to Slack</a>
+          <a href="#features" class="btn btn-secondary">Explore Features</a>
+        </div>
+      </section>
+
+      <section id="features" class="features">
+        <h2 class="section-title">Everything you need</h2>
+        <p class="section-subtitle">A premium set of tools to enhance productivity, answer questions, and keep your team entertained.</p>
+        
+        <div class="features-grid">
+          <div class="glass-card">
+            <div class="feature-icon">🧠</div>
+            <h3 class="feature-title">Conversational Memory</h3>
+            <p class="feature-desc">Powered by local SQLite, slacky-wacky remembers your context across conversations for fluid, continuous interactions.</p>
+          </div>
+          
+          <div class="glass-card">
+            <div class="feature-icon">🖼️</div>
+            <h3 class="feature-title">Image Analysis</h3>
+            <p class="feature-desc">Upload images and let the Groq multimodal vision models analyze, describe, and extract information instantly.</p>
+          </div>
+          
+          <div class="glass-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Live Web Dashboard</h3>
+            <p class="feature-desc">Monitor bot health, track command usage, view live daemon logs, and check API latency in real-time.</p>
+          </div>
+          
+          <div class="glass-card">
+            <div class="feature-icon">🧩</div>
+            <h3 class="feature-title">Interactive UI</h3>
+            <p class="feature-desc">Rich responses utilizing Slack's Block Kit framework for clear, structured, and interactive information display.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section id="commands" class="commands-showcase">
+    <div class="container">
+      <h2 class="section-title">Powerful Commands</h2>
+      <p class="section-subtitle">Interact with slacky-wacky using intuitive slash commands designed for speed.</p>
+      
+      <div class="commands-container">
+        <div class="commands-list">
+          <div class="command-item">
+            <span class="command-name">/slacky-wacky-ask</span>
+            <span class="command-explanation">Ask the AI a question. Maintains conversation history for context-aware follow-ups.</span>
+          </div>
+          <div class="command-item">
+            <span class="command-name">/slacky-wacky-status</span>
+            <span class="command-explanation">Check the current operational status, uptime, and latency of the bot server.</span>
+          </div>
+          <div class="command-item">
+            <span class="command-name">/slacky-wacky-joke</span>
+            <span class="command-explanation">Lighten the mood with a developer or coding-related joke generated by Groq.</span>
+          </div>
+          <div class="command-item">
+            <span class="command-name">/slacky-wacky-fact</span>
+            <span class="command-explanation">Get a mind-blowing, random fun fact to share with your team.</span>
+          </div>
+          <div class="command-item">
+            <span class="command-name">/slacky-wacky-define</span>
+            <span class="command-explanation">Quickly look up a word and receive a concise, accurate definition.</span>
+          </div>
+          <div class="command-item">
+            <span class="command-name">/slacky-wacky-help</span>
+            <span class="command-explanation">Display a summary of all available commands and how to use them.</span>
+          </div>
+        </div>
+        
+        <div class="commands-visual">
+          <div class="mock-slack">
+            <div class="mock-slack-header">
+              <div class="mock-slack-dots">
+                <div class="mock-slack-dot"></div>
+                <div class="mock-slack-dot"></div>
+                <div class="mock-slack-dot"></div>
+              </div>
+              <div class="mock-slack-title">#general</div>
+            </div>
+            <div class="mock-slack-body">
+              <div class="mock-message">
+                <div class="mock-avatar mock-user-avatar">U</div>
+                <div class="mock-message-content">
+                  <div class="mock-message-header">
+                    <span class="mock-author">User</span>
+                    <span class="mock-time">10:14 AM</span>
+                  </div>
+                  <div class="mock-text"><code>/slacky-wacky-ask</code> How do I reverse a string in JavaScript?</div>
+                </div>
+              </div>
+              
+              <div class="mock-message">
+                <div class="mock-avatar">SW</div>
+                <div class="mock-message-content">
+                  <div class="mock-message-header">
+                    <span class="mock-author">slacky-wacky</span>
+                    <span class="mock-time">10:14 AM</span>
+                  </div>
+                  <div class="mock-text">
+                    You can reverse a string in JavaScript by splitting it into an array, reversing the array, and then joining it back together.
+                    <div class="mock-block">
+                      <code>const reversed = str.split('').reverse().join('');</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <footer>
+      <p class="footer-text">&copy; ${new Date().getFullYear()} slacky-wacky. Premium AI Integration for Slack.</p>
+    </footer>
+  </div>
+</body>
+</html>
+  `;
+  res.send(html);
+});
+
+
 
 function startServer(port = 3000) {
   return new Promise((resolve, reject) => {
